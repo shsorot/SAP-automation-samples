@@ -2,9 +2,9 @@
 # Download time:  70 Minutes (Full - 63GB)
 # Download time:  43 Minutes (Partial - 38GB)
 #
-name:             "SAP S/4HANA 1909 SPS 03"
-filename:         'S41909SPS03_v00013ms'
-target:           'S/4 HANA 1909 SPS 03'
+name:             "SAP S/4HANA 1909 ISS 00"
+filename:         'S41909ISS00_v00013ms'
+target:           'S/4 HANA 1909 ISS 00'
 version:          13
 platform:         "HANA"
 InstanceType:     "ABAP"
@@ -25,24 +25,12 @@ product_ids:
 materials:
   dependencies:
     - name:     HANA_2_00_059_v0011ms
+    - name:     SWPM20SP18_latest
+    - name:     SUM20SP20_latest
 
   media:
 
-    # SWPM - Dynamic Download
-    - name:         swpm20
-      dynamic:      true
-      platform:     LNX
-      extract:      true
-      extractDir:   SWPM
-      creates:      SIGNATURE.SMF
-
-    # SUM - Dynamic Download
-    - name:         sum20
-      dynamic:      true
-      platform:     LNX
-      download:     false
-
-    # SAPCAR 7.22
+  # SAPCAR 7.22
     - name:         "SAPCAR 7.22; OS: Linux on x86_64 64bit"
       archive:      SAPCAR_1115-70006178.EXE
       checksum:     765412436934362cc5497e3d659fbb78be91093a091c11ec4fbe84dfb415a0e5
