@@ -1,0 +1,14 @@
+---
+name:                                        'SUM20SP22'
+target:                                      'SUM20SP22'
+version:                                     009
+
+materials:
+
+  media:
+
+    - name:                                  "Patch 9 for SOFTWARE UPDATE MANAGER 2.0 SP22 (Windows on x64 64bit)"
+      archive:                               SUM20SP22_9-80002458.SAR
+      checksum:                              afd5e1d86591109aa142ea79cbd25f28eeb4959e906849cdd3594e272246dc68
+      download:                              false
+      url:                                   https://softwaredownloads.sap.com/file/0020000000584432025

@@ -31,32 +31,28 @@ environment = "DEV"
 location = "northeurope"
 
 # Description of the Workload zone.
-#Description = ""
+Description = "Workload zone for Development systems"
+
+# codename provides an additional component for naming the resources
+#codename = ""
+
+# subscription_id defines the target subscription for the deployment
+#subscription_id = ""
+
+# management_subscription_id defines the management subscription used by the deployment  
+#management_subscription_id = ""
+
+# use_deployer defines if deployer should be used to deploy the resources
+#use_deployer = true
+
+# prevent_deletion_if_contains_resources controls if resource groups are deleted even if they contain resources
+prevent_deletion_if_contains_resources = true
+
+# encryption_at_host_enabled enables host encryption for sap landscape vms
+#encryption_at_host_enabled = false
 
 #If you want to provide a custom naming json use the following parameter.
 #name_override_file = ""
-
-# If defined, will add the Microsoft.Azure.Monitor.AzureMonitorLinuxAgent extension to the virtual machines
-deploy_monitoring_extension = true
-
-# If defined, will add the Microsoft.Azure.Security.Monitoring extension to the virtual machines
-deploy_defender_extension = false
-
-
-#########################################################################################
-#                                                                                       #
-#  Resource group details                                                               #
-#                                                                                       #
-#########################################################################################
-
-# The two resource group name and arm_id can be used to control the naming and the creation of the resource group
-
-# The resourcegroup_name value is optional, it can be used to override the name of the resource group that will be provisioned
-#resourcegroup_name = ""
-
-# The resourcegroup_name arm_id is optional, it can be used to provide an existing resource group for the deployment
-#resourcegroup_arm_id = ""
-
 
 #########################################################################################
 #                                                                                       #
@@ -90,6 +86,12 @@ network_logical_name = "SAP01"
 
 # network_address_space is a mandatory parameter when an existing Virtual network is not used
 network_address_space = "10.120.0.0/16"
+
+# network_flow_timeout_in_minutes defines the flow timeout in minutes of the virtual network
+#network_flow_timeout_in_minutes = null
+
+# network_enable_route_propagation enables network route table propagation
+#network_enable_route_propagation = true
 
 # use_private_endpoint is a boolean flag controlling if the key vaults and storage accounts have private endpoints
 use_private_endpoint = true
@@ -273,6 +275,9 @@ web_subnet_address_prefix = "10.120.128.0/19"
 #                                                                         #
 ###########################################################################
 
+# use_separate_storage_subnet defines if a separate subnet should be used for storage (needed for HANA Scaleout deployments)
+#use_separate_storage_subnet = false
+
 /* storage subnet information */
 # If defined these parameters control the subnet name and the subnet prefix
 # storage_subnet_name is an optional parameter and should only be used if the default naming is not acceptable
@@ -293,25 +298,93 @@ web_subnet_address_prefix = "10.120.128.0/19"
 
 #########################################################################################
 #                                                                                       #
+#  Common Virtual Machine settings                                                      #
+#                                                                                       #
+#########################################################################################
+
+# user_assigned_identity_id defines the user assigned identity to be assigned to the Virtual Machines
+#user_assigned_identity_id = ""
+
+# If defined, will add the Microsoft.Azure.Monitor.AzureMonitorLinuxAgent extension to the Virtual Machines
+deploy_monitoring_extension = false
+
+# If defined, will add the Microsoft.Azure.Security.Monitoring extension to the Virtual Machines
+deploy_defender_extension = false
+
+# If defined, defines the patching mode for the Virtual Machines
+patch_mode = "ImageDefault"
+
+# If defined, defines the mode of VM Guest Patching for the Virtual Machines
+patch_assessment_mode = "ImageDefault"
+
+
+#########################################################################################
+#                                                                                       #
+#  Resource group details                                                               #
+#                                                                                       #
+#########################################################################################
+
+# The two resource group name and arm_id can be used to control the naming and the creation of the resource group
+
+# The resourcegroup_name value is optional, it can be used to override the name of the resource group that will be provisioned
+#resourcegroup_name = ""
+
+# The resourcegroup_name arm_id is optional, it can be used to provide an existing resource group for the deployment
+#resourcegroup_arm_id = ""
+
+# Prevent deletion of resource group if there are Resources left within the Resource Group during deletion
+prevent_deletion_if_contains_resources = true
+
+#########################################################################################
+#                                                                                       #
 #  DNS Settings                                                                         #
 #                                                                                       #
 #########################################################################################
 
-# custom dns resource group name
+
+# Subscription for the resource group containing the Private DNS zone for the compute resources
+#management_dns_subscription_id = ""
+
+# Resource group name for the resource group containing the Private DNS zone for the compute resources
 #management_dns_resourcegroup_name = ""
 
-# custom dns subscription
-#management_dns_subscription_id = ""
+# Subscription for the resource group containing the Private DNS zone for the Privatelink resources
+#privatelink_dns_subscription_id = ""
+
+# Resource group name for the resource group containing the Private DNS zone for the Privatelink resources
+#privatelink_dns_resourcegroup_name = ""
+
 
 # Defines if a custom dns solution is used
 use_custom_dns_a_registration = false
 
-# Defines if the Virtual network for the Virtual machines is registered with DNS
+# Defines if the Virtual network for the Virtual Machines is registered with DNS
 # This also controls the creation of DNS entries for the load balancers
 register_virtual_network_to_dns = true
 
 # register_endpoints_with_dns defines if the endpoints should be registered with the DNS
 register_endpoints_with_dns = true
+
+# register_storage_accounts_keyvaults_with_dns defines if storage accounts and key vaults should be registered to the corresponding dns zones
+#register_storage_accounts_keyvaults_with_dns = true
+
+# dns_zone_names defines the Private DNS zone names
+#dns_zone_names = {
+#  "file_dns_zone_name"      = "privatelink.file.core.windows.net"
+#  "blob_dns_zone_name"      = "privatelink.blob.core.windows.net" 
+#  "table_dns_zone_name"     = "privatelink.table.core.windows.net"
+#  "vault_dns_zone_name"     = "privatelink.vaultcore.azure.net"
+#  "appconfig_dns_zone_name" = "privatelink.azconfig.io"
+#}
+
+# privatelink_file_id defines the ID of the private link file resource
+#privatelink_file_id = ""
+
+# privatelink_storage_id defines the ID of the private link storage resource  
+#privatelink_storage_id = ""
+
+# privatelink_keyvault_id defines the ID of the private link keyvault resource
+#privatelink_keyvault_id = ""
 
 
 #########################################################################################
@@ -339,6 +412,9 @@ enable_rbac_authorization_for_keyvault = false
 
 # The number of days that items should be retained in the soft delete period
 soft_delete_retention_days = 14
+
+# Set expiry date for secrets
+set_secret_expiry = true
 
 #########################################################################################
 #                                                                                       #
@@ -400,6 +476,21 @@ transport_volume_size = 128
 # storage_account_replication_type defines the replication type for Azure Files for NFS storage accounts
 storage_account_replication_type = "ZRS"
 
+# shared_access_key_enabled defines Storage account authorization using Shared Access Key.
+shared_access_key_enabled = false
+
+# shared_access_key_enabled_nfs defines Storage account used for NFS shares authorization using Shared Access Key.
+shared_access_key_enabled_nfs = true
+
+# data_plane_available defines if storage account access is via data plane
+#data_plane_available = true
+
+# Value indicating if file shares are created when using existing storage accounts
+install_always_create_fileshares = true
+
+# Value indicating if SMB shares should be created
+install_create_smb_shares = true
+
 
 #########################################################################################
 #                                                                                       #
@@ -408,7 +499,7 @@ storage_account_replication_type = "ZRS"
 #########################################################################################
 
 # If defined provides the DNS label for the Virtual Network
-dns_label = "azure.sdaf.contoso.net"
+dns_label = "noeu.sdaf.contoso.net"
 
 #If defined provides the lsit of DNS servers to attach to the Virtual NEtwork
 #dns_server_list = []
@@ -423,10 +514,10 @@ dns_label = "azure.sdaf.contoso.net"
 # AFS indicates that Azure Files for NFS is used
 # ANF indicates that Azure NetApp Files is used
 # NFS indicates that a custom solution is used for NFS
-NFS_provider = "AFS"
+NFS_provider = "NFS"
 
 # use_AFS_for_shared_storage defines if shared media is on AFS even when using ANF for data
-use_AFS_for_shared_storage = true
+use_AFS_for_shared_storage = false
 
 #########################################################################################
 #                                                                                       #
@@ -527,9 +618,6 @@ iscsi_authentication_username = "azureadm"
 # Defines the Availability zones for the iSCSI devices
 #iscsi_vm_zones = []
 
-# user_assigned_identity_id defines the user assigned identity to be assigned to the Virtual machines
-#user_assigned_identity_id = ""
-
 #########################################################################################
 #                                                                                       #
 #  Terraform deployment parameters                                                      #
@@ -546,7 +634,7 @@ iscsi_authentication_username = "azureadm"
 #deployer_tfstate_key = ""
 
 # use_spn defines if the deployments are performed using Service Principals or the deployer's managed identiry, true=SPN, false=MSI
-use_spn = true
+use_spn = false
 
 
 #########################################################################################
@@ -589,6 +677,42 @@ tags = {
   "DeployedBy" = "SDAF",
 }
 
+#########################################################################################
+#                                                                                       #
+#                               Export Share Control                                    #
+#                                                                                       #
+#########################################################################################
+
+# export_install_path defines if the export mount path should be created for the installation media
+#export_install_path = true
+
+# export_transport_path defines if the export mount path should be created for the transport media  
+#export_transport_path = true
+
+#########################################################################################
+#                                                                                       #
+#                               Miscellaneous Settings                                  #
+#                                                                                       #
+#########################################################################################
+
+# assign_permissions defines if subscription permissions should be assigned
+#assign_permissions = false
+
+# spn_id defines the Service Principal Id to be used for the deployment
+#spn_id = ""
+
+# platform_updates specifies whether VMAgent Platform Updates is enabled
+#platform_updates = "true"
+
+# additional_network_id defines the Agent Network resource ID
+#additional_network_id = ""
+
+# additional_subnet_id defines the Agent subnet resource ID
+#additional_subnet_id = ""
+
+# custom_random_id defines a custom random id value
+#custom_random_id = ""
+
 ############################################################################################
 #                                                                                          #
 #                                  AMS Configuration                                       #
@@ -603,3 +727,30 @@ create_ams_instance = false
 
 # ams_laws_arm_id if provided, Azure resource id for the Log analytics workspace in AMS
 #ams_laws_arm_id = ""
+
+#######################################4#######################################8
+#                                                                              #
+#                             NAT Gateway variables                            #
+#                                                                              #
+#######################################4#######################################8
+
+# If true, a NAT gateway will be created
+deploy_nat_gateway = false
+
+# If provided, the name of the NAT Gateway
+#nat_gateway_name = ""
+
+# If provided, the Azure resource id for the NAT Gateway
+#nat_gateway_arm_id = ""
+
+# If provided, the zones for the NAT Gateway public IP
+#nat_gateway_public_ip_zones = []
+
+# If provided, Azure resource id for the NAT Gateway public IP
+#nat_gateway_public_ip_arm_id = ""
+
+# The idle timeout in minutes for the NAT Gateway
+#nat_gateway_idle_timeout_in_minutes = 0
+
+# If provided, the tags for the NAT Gateway public IP
+#nat_gateway_public_ip_tags = {}
